@@ -22,5 +22,3 @@ download data
 ```{r}
 source("data-raw/build_reference.R")
 ```
-
-The `echo: false` option disables the printing of code (only output is displayed).
