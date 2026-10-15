@@ -20,54 +20,109 @@ library(lutz)           # lat / lon -> time zone
 
 # ------------------------- look & feel ---------------------------
 
-pal <- list(night = "#1B2A4A", sleep = "#3B4F9A", day = "#FFE29A", sun = "#F2A93B",
-            you = "#E4572E", pop = "#C9D1E3", good = "#2E9E83", mute = "#6C7A96")
+# Traditional Japanese colours (approximate hex values)
+#   kon 紺 (deep navy)      ai 藍 (indigo)        asagi 浅葱 (light teal)
+#   yamabuki 山吹 (gold)    shu 朱 (vermilion)    wakatake 若竹 (young bamboo)
+#   rokusho 緑青 (verdigris) shironeri 白練 (off-white)  shirafuji 白藤 (pale wisteria)
+pal <- list(
+  night = "#0F2540",   # kon
+  sleep = "#165E83",   # ai
+  teal  = "#0E8A96",   # asagi (deepened)
+  day   = "#FCD575",   # tamago-ish gold for daylight
+  sun   = "#F8B500",   # yamabuki
+  you   = "#EB6101",   # shu
+  pop   = "#C5C6DE",   # shirafuji
+  good  = "#3B7960",   # rokusho
+  mute  = "#7A7F72",   # rikyu-nezumi
+  paper = "#FAF8F2"    # shironeri
+)
 
 # >>> CHANGE FONTS HERE (any Google Font name works) <<<
-FONT_BODY    <- "Nunito"
-FONT_HEADING <- "Poppins"
+FONT_BODY    <- "Zen Maru Gothic"   # soft, rounded, friendly
+FONT_HEADING <- "Shippori Mincho"   # elegant Japanese-style serif
 
 app_theme <- bs_theme(
   version = 5,
-  bg = "#F7F5F0", fg = pal$night,
+  bg = pal$paper, fg = "#2A2B33",
   primary = pal$sleep, secondary = pal$mute,
-  success = pal$good, warning = pal$sun, info = "#5B8DEF",
-  base_font = font_google(FONT_BODY, local = FALSE),
-  heading_font = font_google(FONT_HEADING, local = FALSE)
+  success = pal$good, warning = pal$sun, info = pal$teal, danger = pal$you,
+  base_font = font_google(FONT_BODY, wght = c(400, 500, 700), local = FALSE),
+  heading_font = font_google(FONT_HEADING, wght = c(500, 700), local = FALSE)
 ) |>
-  bs_add_rules("
-    .navbar { background: #1B2A4A !important; }
-    .navbar .navbar-brand, .navbar .nav-link { color: #F7F5F0 !important; }
-    .navbar .nav-link.active { border-bottom: 2px solid #F2A93B; }
-    .card { border: 0; border-radius: 16px; box-shadow: 0 2px 14px rgba(27,42,74,.07); }
-    .card-header { background: transparent; border-bottom: 0; 
-                   font-size: 1.15rem; padding-bottom: 0; }
-    .bslib-value-box { border-radius: 16px; }
+  bs_add_rules(r"---(
+    body { background: #FAF8F2; }
+
+    /* ---- navbar ---- */
+    .navbar { background: linear-gradient(100deg, #0F2540 0%, #165E83 100%) !important;
+              border-bottom: 3px solid #F8B500; }
+    .navbar .navbar-brand { color: #FAF8F2 !important; font-family: var(--bs-heading-font-family, serif);
+                            font-weight: 700; letter-spacing: .02em; }
+    .navbar .nav-link { color: rgba(250,248,242,.75) !important; padding-bottom: .55rem; }
+    .navbar .nav-link:hover { color: #FAF8F2 !important; }
+    .navbar .nav-link.active { color: #FAF8F2 !important; border-bottom: 2px solid #F8B500; }
+
+    /* ---- hero ---- */
+    .hero { position: relative; overflow: hidden; color: #FAF8F2; border-radius: 18px;
+            background: linear-gradient(120deg, #0F2540 0%, #165E83 100%);
+            padding: 1.6rem 2rem; margin-bottom: 1.1rem; }
+    .hero::after { content: ""; position: absolute; right: -50px; top: -50px; width: 210px; height: 210px;
+                   border-radius: 50%;
+                   background: radial-gradient(circle, #F8B500 0 42%, rgba(248,181,0,.38) 43% 60%,
+                                               rgba(248,181,0,.16) 61% 78%, transparent 79%); }
+    .hero h2 { font-size: 1.75rem; margin: 0 0 .35rem; color: #FAF8F2; }
+    .hero p  { margin: 0; max-width: 36rem; opacity: .88; }
+
+    /* ---- cards ---- */
+    .card { background: #FFFFFF; border: 1px solid rgba(15,37,64,.06); border-radius: 16px;
+            box-shadow: 0 6px 22px rgba(15,37,64,.07); }
+    .card-header { background: transparent; border-bottom: 0; padding-bottom: 0;
+                   font-family: var(--bs-heading-font-family, serif); font-weight: 700; font-size: 1.15rem;
+                   color: #0F2540; }
+    .card-header::before { content: ""; display: inline-block; width: 4px; height: 1.05em;
+                           background: #EB6101; border-radius: 2px; margin-right: .6rem; vertical-align: -.15em; }
+
+    /* ---- value boxes ---- */
+    .bslib-value-box { border-radius: 16px; border: 0; box-shadow: 0 6px 22px rgba(15,37,64,.12); }
+    .bslib-value-box .value-box-title { font-size: .82rem; letter-spacing: .05em; text-transform: uppercase; opacity: .92; }
+    .bslib-value-box .value-box-value { font-family: var(--bs-heading-font-family, serif); font-weight: 700; }
+
+    /* ---- forms ---- */
+    .form-control, .form-select { border-radius: 10px; border-color: #E4DFD3; background-color: #FEFDFB; }
+    .form-control:focus, .form-select:focus { border-color: #165E83; box-shadow: 0 0 0 .2rem rgba(22,94,131,.15); }
+    .btn { border-radius: 999px; }
+    .shiny-input-container > label, .control-label { font-weight: 500; color: #2A2B33; }
+
+    /* ---- weekly grid ---- */
     .week-wrap { overflow-x: auto; }
     .week-grid { display: grid; min-width: 760px;
                  grid-template-columns: 96px 64px repeat(3, minmax(96px, 1fr)) repeat(2, minmax(120px, 1.3fr));
-                 gap: .35rem .75rem; align-items: center; }
-    .wk-head { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: #6C7A96; }
-    .wk-day  { font-weight: 600; }
+                 gap: .4rem .75rem; align-items: center; }
+    .wk-head { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: #7A7F72;
+               padding-bottom: .3rem; border-bottom: 1px solid #ECE8DF; }
+    .wk-day  { font-weight: 700; color: #165E83; }
     .week-grid .form-group, .week-grid .shiny-input-container { margin-bottom: 0; width: 100%; }
     .week-grid .irs-min, .week-grid .irs-max { display: none; }
     .week-grid .irs { height: 34px; }
-    .insight-list li { padding: .45rem 0; border-bottom: 1px solid #ECE8DF; }
+
+    /* ---- misc ---- */
+    .insight-list li { padding: .55rem 0; border-bottom: 1px solid #F0ECE2; }
     .insight-list li:last-child { border-bottom: 0; }
-    .insight-list svg { color: #F2A93B; margin-right: .35rem; }
-    .pill { display: inline-block; padding: .2rem .7rem; border-radius: 999px;
-            background: #FFF1C9; color: #8A5A00; font-size: .85rem; margin-right: .4rem; }
-    .hint { color: #6C7A96; font-size: .85rem; }
-  ")
+    .insight-list svg { color: #EB6101; margin-right: .4rem; }
+    .pill { display: inline-block; padding: .22rem .75rem; border-radius: 999px;
+            background: #F8EBC9; color: #6B4E00; font-size: .85rem; margin: 0 .4rem .3rem 0; }
+    .hint { color: #7A7F72; font-size: .85rem; }
+    h4, h5, h6 { color: #0F2540; }
+  )---")
 
 theme_sleep <- function(base = 12) {
-  theme_minimal(base_size = base, base_family = "") +
+  theme_minimal(base_size = base) +
     theme(panel.grid.minor = element_blank(),
-          panel.grid.major.y = element_line(colour = "#ECE8DF"),
-          panel.grid.major.x = element_line(colour = "#ECE8DF"),
+          panel.grid.major.y = element_line(colour = "#EFEBE1"),
+          panel.grid.major.x = element_line(colour = "#EFEBE1"),
           plot.title = element_text(face = "bold", colour = pal$night),
           plot.subtitle = element_text(colour = pal$mute),
           axis.title = element_text(colour = pal$mute),
+          axis.text = element_text(colour = "#4A4D55"),
           legend.position = "bottom",
           plot.background = element_rect(fill = NA, colour = NA))
 }
@@ -129,6 +184,10 @@ ui <- page_navbar(
   # ---------------- TAB 1: input ----------------
   nav_panel(
     "1 \u00b7 Your week", icon = bs_icon("pencil-square"),
+    div(class = "hero",
+        h2("Your week, your body clock"),
+        p("Tell us when you slept, worked and felt tired. We'll show how your rhythm lines up with daylight",
+          " and how you compare with thousands of people in a US national health survey.")),
     layout_columns(
       col_widths = c(4, 8),
       div(
@@ -139,14 +198,7 @@ ui <- page_navbar(
             numericInput("age", "Age", 30, min = 16, max = 100),
             selectInput("sex", "Sex", c("Female" = "F", "Male" = "M"))
           ),
-          p(class = "hint", "Age and sex are only used to pick a matching comparison group."),
-          hr(),
-          h6("Over the past two weeks, how often have you been bothered by…"),
-          p(class = "hint", "Same wording as the NHANES questionnaire, so we can compare you to a real population."),
-          radioButtons("phq_down", "Feeling down, depressed or hopeless",
-                       choices = setNames(0:3, PHQ_LABELS), selected = 0, inline = TRUE),
-          radioButtons("phq_tired", "Feeling tired or having little energy",
-                       choices = setNames(0:3, PHQ_LABELS), selected = 1, inline = TRUE)
+          p(class = "hint", "Age and sex are only used to pick a matching comparison group.")
         ),
         card(
           card_header("Where & when"),
@@ -167,6 +219,15 @@ ui <- page_navbar(
               div(tags$label("Sunset", class = "form-label"), time_input("sunset_in", "17:00"))
             )
           )
+        ),
+        card(
+          card_header("Past two weeks"),
+          h6("How often have you been bothered by…"),
+          p(class = "hint", "Same wording as the NHANES questionnaire, so we can compare you to a real population."),
+          radioButtons("phq_down", "Feeling down, depressed or hopeless",
+                       choices = setNames(0:3, PHQ_LABELS), selected = 0, inline = TRUE),
+          radioButtons("phq_tired", "Feeling tired or having little energy",
+                       choices = setNames(0:3, PHQ_LABELS), selected = 1, inline = TRUE)
         )
       ),
       card(
@@ -422,7 +483,7 @@ server <- function(input, output, session) {
       geom_line(linewidth = 1.3) + geom_point(size = 3.2) +
       scale_x_date(date_labels = "%a") +
       scale_y_continuous(limits = c(1, 10), breaks = 1:10) +
-      scale_colour_manual(NULL, values = c(Mood = pal$good, Tiredness = pal$sun)) +
+      scale_colour_manual(NULL, values = c(Mood = pal$good, Tiredness = "#E0A100")) +
       labs(x = NULL, y = NULL) + theme_sleep()
   })
 
