@@ -139,15 +139,14 @@ ui <- page_navbar(
             numericInput("age", "Age", 30, min = 16, max = 100),
             selectInput("sex", "Sex", c("Female" = "F", "Male" = "M"))
           ),
-          p(class = "hint", "Age and sex are only used to pick a matching comparison group.")
-        ),
-        card(
-          card_header("Past two weeks"),
-          p(class = "hint", "Same wording as the PHQ-9 questions in NHANES, so we can compare you to a real population."),
+          p(class = "hint", "Age and sex are only used to pick a matching comparison group."),
+          hr(),
+          h6("Over the past two weeks, how often have you been bothered by…"),
+          p(class = "hint", "Same wording as the NHANES questionnaire, so we can compare you to a real population."),
           radioButtons("phq_down", "Feeling down, depressed or hopeless",
-                       choices = setNames(0:3, PHQ_LABELS), selected = 0),
+                       choices = setNames(0:3, PHQ_LABELS), selected = 0, inline = TRUE),
           radioButtons("phq_tired", "Feeling tired or having little energy",
-                       choices = setNames(0:3, PHQ_LABELS), selected = 1)
+                       choices = setNames(0:3, PHQ_LABELS), selected = 1, inline = TRUE)
         ),
         card(
           card_header("Where & when"),
