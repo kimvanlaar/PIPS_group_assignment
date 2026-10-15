@@ -23,20 +23,24 @@ library(lutz)           # lat / lon -> time zone
 pal <- list(night = "#1B2A4A", sleep = "#3B4F9A", day = "#FFE29A", sun = "#F2A93B",
             you = "#E4572E", pop = "#C9D1E3", good = "#2E9E83", mute = "#6C7A96")
 
+# >>> CHANGE FONTS HERE (any Google Font name works) <<<
+FONT_BODY    <- "Nunito"
+FONT_HEADING <- "Poppins"
+
 app_theme <- bs_theme(
   version = 5,
   bg = "#F7F5F0", fg = pal$night,
   primary = pal$sleep, secondary = pal$mute,
   success = pal$good, warning = pal$sun, info = "#5B8DEF",
-  base_font = font_google("Inter", local = FALSE),
-  heading_font = font_google("Fraunces", local = FALSE)
+  base_font = font_google(FONT_BODY, local = FALSE),
+  heading_font = font_google(FONT_HEADING, local = FALSE)
 ) |>
   bs_add_rules("
     .navbar { background: #1B2A4A !important; }
     .navbar .navbar-brand, .navbar .nav-link { color: #F7F5F0 !important; }
     .navbar .nav-link.active { border-bottom: 2px solid #F2A93B; }
     .card { border: 0; border-radius: 16px; box-shadow: 0 2px 14px rgba(27,42,74,.07); }
-    .card-header { background: transparent; border-bottom: 0; font-family: Fraunces, serif;
+    .card-header { background: transparent; border-bottom: 0; 
                    font-size: 1.15rem; padding-bottom: 0; }
     .bslib-value-box { border-radius: 16px; }
     .week-wrap { overflow-x: auto; }
@@ -129,6 +133,23 @@ ui <- page_navbar(
       col_widths = c(4, 8),
       div(
         card(
+          card_header("About you"),
+          textInput("pid", "Participant ID", placeholder = "e.g. P001"),
+          layout_columns(
+            numericInput("age", "Age", 30, min = 16, max = 100),
+            selectInput("sex", "Sex", c("Female" = "F", "Male" = "M"))
+          ),
+          p(class = "hint", "Age and sex are only used to pick a matching comparison group.")
+        ),
+        card(
+          card_header("Past two weeks"),
+          p(class = "hint", "Same wording as the PHQ-9 questions in NHANES, so we can compare you to a real population."),
+          radioButtons("phq_down", "Feeling down, depressed or hopeless",
+                       choices = setNames(0:3, PHQ_LABELS), selected = 0),
+          radioButtons("phq_tired", "Feeling tired or having little energy",
+                       choices = setNames(0:3, PHQ_LABELS), selected = 1)
+        ),
+        card(
           card_header("Where & when"),
           textInput("place", NULL, placeholder = "City, country (e.g. Berlin, Germany)"),
           actionButton("geocode", "Find location", icon = icon("location-dot"), class = "btn-primary btn-sm"),
@@ -147,22 +168,6 @@ ui <- page_navbar(
               div(tags$label("Sunset", class = "form-label"), time_input("sunset_in", "17:00"))
             )
           )
-        ),
-        card(
-          card_header("About you"),
-          layout_columns(
-            numericInput("age", "Age", 30, min = 16, max = 100),
-            selectInput("sex", "Sex", c("Female" = "F", "Male" = "M"))
-          ),
-          p(class = "hint", "Only used to pick a matching comparison group.")
-        ),
-        card(
-          card_header("Past two weeks"),
-          p(class = "hint", "Same wording as the PHQ-9 questions in NHANES, so we can compare you to a real population."),
-          radioButtons("phq_down", "Feeling down, depressed or hopeless",
-                       choices = setNames(0:3, PHQ_LABELS), selected = 0),
-          radioButtons("phq_tired", "Feeling tired or having little energy",
-                       choices = setNames(0:3, PHQ_LABELS), selected = 1)
         )
       ),
       card(
@@ -184,11 +189,23 @@ ui <- page_navbar(
   # ---------------- TAB 2: results ----------------
   nav_panel(
     "2 \u00b7 Results", icon = bs_icon("graph-up"),
+    uiOutput("pid_banner"),
     layout_columns(
       fill = FALSE,
       value_box("Average sleep", textOutput("vb_sd"), showcase = bs_icon("moon-stars"), theme = "primary"),
-      value_box("Chronotype (MSFsc)", textOutput("vb_msfsc"), showcase = bs_icon("clock-history"), theme = "info"),
-      value_box("Social jet lag", textOutput("vb_sjl"), showcase = bs_icon("airplane"), theme = "warning"),
+      value_box(
+        title = tagList("Body clock type ",
+                        tooltip(bs_icon("info-circle"),
+                                "Whether your body clock runs early or late. We use the middle of your sleep on free days, adjusted for catch-up sleep. A lower time means earlier. (Scientific name: chronotype, MSFsc.)")),
+        value = textOutput("vb_msfsc"),
+        textOutput("vb_chrono_label"),
+        showcase = bs_icon("clock-history"), theme = "info"),
+      value_box(
+        title = tagList("Work vs. free-day shift ",
+                        tooltip(bs_icon("info-circle"),
+                                "How much the middle of your sleep moves between work days and free days. A big shift feels like jet lag. (Scientific name: social jet lag.)")),
+        value = textOutput("vb_sjl"),
+        showcase = bs_icon("airplane"), theme = "warning"),
       value_box("Mood \u00b7 tiredness", textOutput("vb_mt"), showcase = bs_icon("emoji-smile"), theme = "success")
     ),
     layout_columns(
@@ -225,9 +242,11 @@ ui <- page_navbar(
         "Its sleep questionnaire was adapted from the Munich ChronoType Questionnaire: participants report when they usually fall asleep and wake up ",
         "on workdays and on non-workdays. From these we compute the same MCTQ measures we compute for you."),
       tags$ul(
-        tags$li(strong("Sleep duration"), ": wake time minus sleep onset, weighted over work and free days."),
-        tags$li(strong("Chronotype (MSFsc)"), ": mid-sleep on free days, corrected for catch-up sleep."),
-        tags$li(strong("Social jet lag"), ": difference between mid-sleep on free days and work days."),
+        tags$li(strong("Average sleep"), ": time between falling asleep and waking up, averaged over your work and free days."),
+        tags$li(strong("Body clock type"), " (chronotype): the middle point of your sleep on free days, adjusted for catch-up sleep. ",
+                "The label compares you with the selected NHANES group: earliest 10% = strong morning lark, next 20% = morning lark, ",
+                "middle 40% = in between, next 20% = night owl, latest 10% = strong night owl. These cut-offs are this app's choice, not an official MCTQ classification."),
+        tags$li(strong("Work vs. free-day shift"), " (social jet lag): how far the middle of your sleep moves between work days and free days."),
         tags$li(strong("Mood & tiredness"), ": two PHQ-9 items (feeling down; feeling tired / little energy) over the past 2 weeks.")
       ),
       h5("Caveats"),
@@ -236,7 +255,7 @@ ui <- page_navbar(
         tags$li("Participants who don't work, or who work shifts, answer the same 'weekday/workday' question; we can't separate them."),
         tags$li("Percentiles use the NHANES interview survey weights, but no confidence intervals."),
         tags$li("Your 1\u201310 daily mood/tiredness scores have no NHANES equivalent; only the two past-2-weeks questions are compared."),
-        tags$li("Chronotype varies with age, sex, latitude and season, so use the age / sex filters.")
+        tags$li("Body clock type varies with age, sex, latitude and season, so use the age / sex filters.")
       )
     )
   )
@@ -330,6 +349,11 @@ server <- function(input, output, session) {
     user_metrics(d)
   })
 
+  output$pid_banner <- renderUI({
+    if (!is.null(input$pid) && nzchar(trimws(input$pid)))
+      h4(paste0("Participant ", trimws(input$pid)), class = "mb-3")
+  })
+
   # ---- value boxes ----
   output$vb_sd    <- renderText(fmt_dur(metrics()$sd_week))
   output$vb_msfsc <- renderText({
@@ -363,9 +387,9 @@ server <- function(input, output, session) {
     if (!is.na(m$sjl))
       add("arrow-left-right", "Your sleep midpoint shifts by ", strong(fmt_dur(m$sjl)),
           " between work and free days",
-          if (m$sjl >= 1) " \u2013 that's notable social jet lag." else ".")
+          if (m$sjl >= 1) " \u2013 that's a big shift, a bit like jet lag." else ".")
     if (!is.na(m$sd_w) && !is.na(m$sd_f) && m$sd_f - m$sd_w >= 1)
-      add("moon", "You sleep ", strong(fmt_dur(m$sd_f - m$sd_w)), " longer on free days: a sign of sleep debt during the week.")
+      add("moon", "You sleep ", strong(fmt_dur(m$sd_f - m$sd_w)), " longer on free days: a sign you may be short on sleep during the week.")
     if (!length(items)) items <- list(tags$li("Fill in your week to see insights."))
     tags$ul(class = "list-unstyled insight-list", items)
   })
@@ -413,6 +437,20 @@ server <- function(input, output, session) {
     r
   })
 
+  # Chronotype label, based on where you fall in the (filtered) NHANES distribution
+  output$vb_chrono_label <- renderText({
+    m <- metrics()
+    if (is.na(m$msf_sc)) return("")
+    r <- ref()
+    pct <- w_pct(wrap_ms(r$msf_sc), r$w, wrap_ms(m$msf_sc))
+    lab <- if (pct < 10) "Strong morning lark"
+           else if (pct < 30) "Morning lark"
+           else if (pct <= 70) "In between"
+           else if (pct <= 90) "Night owl"
+           else "Strong night owl"
+    paste0(lab, " \u00b7 later than ", round(pct), "% of people")
+  })
+
   output$ref_source <- renderUI({
     if (REF_REAL) span(class = "pill", paste0("NHANES 2017\u20132020 \u00b7 n = ", format(nrow(ref()), big.mark = ",")))
     else span(class = "pill", style = "background:#FBD5CC;color:#8A2A12;",
@@ -437,11 +475,11 @@ server <- function(input, output, session) {
   }
 
   output$p_ref_msfsc <- renderPlot(
-    ref_plot("msf_sc", metrics()$msf_sc, "Chronotype (MSFsc, clock time)", fmt_hm, "Later", clock = TRUE))
+    ref_plot("msf_sc", metrics()$msf_sc, "Body clock type (middle of sleep on free days)", fmt_hm, "Later", clock = TRUE))
   output$p_ref_sd <- renderPlot(
     ref_plot("sd_week", metrics()$sd_week, "Average sleep per night (h)", fmt_dur, "Longer"))
   output$p_ref_sjl <- renderPlot(
-    ref_plot("sjl", metrics()$sjl, "Social jet lag (h)", fmt_dur, "More"))
+    ref_plot("sjl", metrics()$sjl, "Work vs. free-day shift (h)", fmt_dur, "More"))
 
   phq_plot <- function(col, you, title) {
     r <- ref(); r <- r[!is.na(r[[col]]), ]
