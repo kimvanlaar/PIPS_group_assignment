@@ -152,8 +152,7 @@ continuous_plot <- plot_outcomes_continuous(
                                    SCALE_NOTE))
 print(continuous_plot)
 
-# ---- Adjusted GAM: age, sex and weekly sleep duration ----
-# This is unchanged: Option 2 applies only to the unadjusted plots.
+# ---- Adjusted GAM: age, sex and weekly sleep duration as covariates considered----
 continuous_adj_plot <- plot_outcomes_continuous(
   data_list = list(dat_tired, dat_down),
   outcomes = c("phq_tired", "phq_down"),
