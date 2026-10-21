@@ -25,6 +25,7 @@ sleep_app/
 You should have R and RStudio installed on your computer. You should also have an internet connection for installing packages. 
 
 Clone the repository using R
+CHECK THIS!!!! I DON'T THINK IT WORKS :(
 
 ```r
 system("git clone https://github.com/kimvanlaar/PIPS_group_assignment.git")
