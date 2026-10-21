@@ -1,4 +1,6 @@
 # Sleep lab installation, usage and statistical analysis
+This README covers the essential information required to install, run, and interpret our project. 
+
 ## Project overview
 This project contains an R Shiny application about sleep, daylight and the biological clock. Besides that, it includes a separate R script for statistical analyses of social jet lag en tiredness and mood. Data for these analyses have been taken from the NHANES survey !!!ADD CITATION!!!
 
@@ -15,12 +17,12 @@ The main project files are as following:
 You should have R and RStudio installed on your computer. You should also have an internet connection for installing packages. 
 
 ## Running the app
-1. Open sleep_app.Rproj
+- Open sleep_app.Rproj
 
    Working via the project makes sure that the project directory is used as the working directory.
 
-2. Open app.R
-3. Click **Run App**
+- Open app.R
+- Click **Run App**
 
 ## Using the app
 The app contains two main parts, the human lab part and the rat lab part. 
@@ -64,6 +66,7 @@ For each outcome, a multiple linear regression predicts the score from social je
 - A results table per model in the console (estimate, 95% confidence interval, p-value).
 - Residual plots for both models.
 - Plots of both outcomes side by side: a static version (Plots tab) and an interactive plotly version (Viewer tab), where you can hover over the points to see the exact numbers.
+- Bar plots of the percentage of responses for tiredness/low mood for different social jet lag groups.
 
 ### How to run the statistical analysis:
 - Open sleep_app.Rproj
@@ -80,8 +83,24 @@ A regression coefficient for sjl (social jet lag) represents the estimated chang
 - The data contains US citizens only, generalizability to the full world population might therefore not be possible.
 
 ## Troubleshooting
+### helpers.R cannot be found
+- Open the sleep_app.Rproj file and run the application from the sleep_app directory.
+- Check that R/helpers.R exists.
 
+### nhanes_ref.rds is missing
+•	Run source("data-raw/build_reference.R") from the project directory.
+•	If you only want to explore the application, it may use simulated data. Do not treat simulated reference results as actual research findings.
 
+### Packages cannot be installed
+- Check your internet connection, CRAN mirror settings, and permissions to install R packages.
+- If necessary, install a package manually using install.packages("package_name").
+
+### The app cannot find files
+- Check the current working directory with getwd().
+- Open the project through sleep_app.Rproj rather than opening an individual R file separately.
+
+### Geographical information or daylight information does not work
+- Check the entered location and your internet connection.
 
 ## References
 - Bryan, S., Afful, J., Carroll, M., Te-Ching, C., Orlando, D., Fink, S., & Fryar, C. (2021). NHSR 158. National Health and Nutrition Examination Survey 2017–March 2020 Pre-pandemic Data Files (Nummer 158). https://doi.org/10.15620/cdc:106273
