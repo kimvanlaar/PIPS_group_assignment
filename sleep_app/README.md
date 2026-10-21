@@ -2,21 +2,33 @@
 This README covers the essential information required to install, run, and interpret our project. 
 
 ## Project overview
-This project contains an R Shiny application about sleep, daylight and the biological clock. Besides that, it includes a separate R script for statistical analyses of social jet lag en tiredness and mood. Data for these analyses have been taken from the NHANES survey !!!ADD CITATION!!!
+This project contains an R Shiny application about sleep, daylight and the biological clock. Besides that, it includes a separate R script for statistical analyses of social jet lag en tiredness and mood. Data for these analyses have been taken from the NHANES survey (Bryan et al., 2021). 
 
-The main project files are as following:
-- app.R: the Shiny app.
-- statistical_analysis.R: the statistical analyses and graphs of social jet lag, tiredness and mood.
-- R/helpers.R: contains functions used in app.R and statistical_analysis.R !!!OR ONLY IN APP.R?!!!.
-- data.nhanes_ref.rds: the NHANES dataset used for the app and analysis.
-- data-raw/build_reference.R: used to rebuild the nhanes dataset.
-- README.md: this installation and usage guide
-- README_general.md: theoretical background on social sleep debt.
+## Repository structure
+
+```text
+sleep_app/
+├── data/
+│   └── nhanes_ref.rds       # the NHANES dataset used for the app and analysis
+├── data-raw/
+│   └── build_reference.R    # Script used to rebuild the NHANES dataset
+├── R/
+│   └── helpers.R            # Ccontains functions used in app.R and statistical_analysis.R !!!OR ONLY IN APP.R?!!!
+├── app.R                    # Shiny application
+├── statistical_analysis.R   # Statistical analysis and graphs of social jet lag, tiredness and mood
+├── sleep_app.Rproj          # RStudio project file
+├── README.md                # This installation and usage guide
+└── README_THEORY.md         # Theoretical background on social sleep debt
+```
 
 ## Requirements for running the app
 You should have R and RStudio installed on your computer. You should also have an internet connection for installing packages. 
 
-LOOK INTO THIS !!! Clone the repository !!!
+Clone the repository using R
+
+```r
+system("git clone https://github.com/kimvanlaar/PIPS_group_assignment.git")
+```
 
 ## Running the app
 - Open sleep_app.Rproj
@@ -36,7 +48,8 @@ When you've entered everything mentioned above, you can view your results. Click
 
 If you want more information about the data, you can click **About the data** on the top of the screen. There you can read more about the data. 
 
-**Nhanes reference data**
+**NHANES reference data**
+
 The app uses the NHANES data when it can find it. If the file is missing or not in the correct folder, the app uses a simulated reference dataset instead. The message that pops up when you open the app will tell you which data is being used.
 
 ### The rat lab
