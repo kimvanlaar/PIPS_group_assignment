@@ -16,6 +16,8 @@ The main project files are as following:
 ## Requirements for running the app
 You should have R and RStudio installed on your computer. You should also have an internet connection for installing packages. 
 
+LOOK INTO THIS !!! Clone the repository !!!
+
 ## Running the app
 - Open sleep_app.Rproj
 
