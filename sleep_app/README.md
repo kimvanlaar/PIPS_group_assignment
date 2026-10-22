@@ -53,7 +53,7 @@ If you want more information about the data, you can click **About the data** on
 The app uses the NHANES data when it can find it. If the file is missing or not in the correct folder, the app uses a simulated reference dataset instead. The message that pops up when you open the app will tell you which data is being used.
 
 ### The Rat Lab
-The Rat Lab is an actogram simulator, which lets you simulate the activity of rats based on different light and darkness schedules. You can access the rat lab by clicking on **Rat clock lab** on the top of the screen. We wanted to simulate this phenomenon to show that not only humans but all living creatures have an internal clock that is linked with the circadian rhythms and will go haywire when the Light and Dark schedule is disturbed. Please refer to the theory read me for more information. 
+The Rat Lab is an actogram simulator, which lets you simulate the activity of rats based on different light and darkness schedules. You can access the rat lab by clicking on **Rat clock lab** on the top of the screen. We wanted to simulate this phenomenon to show that not only humans but all living creatures have an internal clock that is linked with the circadian rhythms and will go haywire when the Light and Dark schedule is disturbed. 
 
 In order to do so, select a predefined lightning schedule or create one yourself. The actogram will now automatically start running. You can play around with the lightning and rat settings to explore free-running rhythms, entrainment and phase shifts.  
 
