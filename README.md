@@ -17,9 +17,9 @@ sleep_app/
 │   │   └── build_reference.R      # Script used to rebuild the NHANES dataset
 │   ├── data/
 │   │   └── nhanes_ref.rds         # the NHANES dataset used for the app and analysis
-│   ├── main_sleep_app.R           # Shiny application
-│   ├── main_stats.R               # Statistical analysis and visualizations of social jet lag, tiredness and mood
-│   └── sleep_app.Rproj            # RStudio project file
+├── main_sleep_app.R           # Shiny application
+├── main_stats.R               # Statistical analysis and visualizations of social jet lag, tiredness and mood
+├── sleep_app.Rproj            # RStudio project file
 ├── .gitignore                     # Files excluded from Git
 └── README.md                      # Project documentation: this installation and usage guide
 ```
