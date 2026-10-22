@@ -39,7 +39,7 @@ system("git clone https://github.com/kimvanlaar/PIPS_group_assignment.git")
 
    Working via the project makes sure that the project directory is used as the working directory.
 
-- Open app.R
+- Open main_sleep_app.R
 - Click **Run App**
 
 ## Using the app
@@ -63,13 +63,13 @@ In order to do so, select a predefined lightning schedule or create one yourself
 
 ## Running the statistical analysis
 ### Research questions
-The statistical_analysis.R script investigates two research questions:
+The main_stats.R script investigates two research questions:
 1. Is greater social jet lag associated with more tiredness?
 2. Is greater social jet lag associated with lower mood?
 The regression models used to answer these research questions also adjust for age, sex and average weekly sleep duration.
 
 ### Data
-We use the NHANES 2017 to March 2020 data that is already included in the repository (`sleep app/data/nhanes_ref.rds`; Bryan et al., 2021). It contains sleep and wake times on workdays and free days, which we use to compute social jet lag (Wittmann et al., 2006), and two items from the PHQ-9 questionnaire (Kroenke et al., 2001): "Feeling tired or having little energy" and "Feeling down, depressed or hopeless", both scored from 0 (not at all) to 3 (nearly every day). sd_week is the average weekly sleep duration.
+We use the NHANES 2017 to March 2020 data that is already included in the repository (`sleep app/src/data/nhanes_ref.rds`; Bryan et al., 2021). It contains sleep and wake times on workdays and free days, which we use to compute social jet lag (Wittmann et al., 2006), and two items from the PHQ-9 questionnaire (Kroenke et al., 2001): "Feeling tired or having little energy" and "Feeling down, depressed or hopeless", both scored from 0 (not at all) to 3 (nearly every day). sd_week is the average weekly sleep duration.
 
 ### Data preparation
 - Only adults (18+) are kept, because the PHQ-9 items were only asked from age 18.
@@ -89,8 +89,8 @@ For each outcome, a multiple linear regression predicts the score from social je
 - Bar plots of the percentage of responses for tiredness/low mood for different social jet lag groups.
 
 ### How to run the statistical analysis:
-- Open sleep_app.Rproj
-- Open statistical_analysis.R
+- Open main_sleep_app.Rproj
+- Open main_stats.R
 - Run the script using **Source**
 - Look at the output
 
@@ -105,7 +105,7 @@ A regression coefficient for sjl (social jet lag) represents the estimated chang
 ## Troubleshooting
 ### helpers.R cannot be found
 - Open the sleep_app.Rproj file and run the application from the sleep_app directory.
-- Check that R/helpers.R exists.
+- Check that R/helpers.R exists in the source folder.
 
 ### nhanes_ref.rds is missing
 •	Run source("data-raw/build_reference.R") from the project directory.
