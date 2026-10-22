@@ -115,8 +115,8 @@ A regression coefficient for sjl (social jet lag) represents the estimated chang
 - shiny
 - 
 
-The required packages are automatically installed
-when the application is run.
+The required packages are automatically installed when they are missing.
+
 ## Troubleshooting
 ### helpers.R cannot be found
 - Open the sleep_app.Rproj file and run the application from the sleep_app directory.
