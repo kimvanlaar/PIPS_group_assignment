@@ -113,7 +113,8 @@ A regression coefficient for sjl (social jet lag) represents the estimated chang
 - ggplot2
 - dplyr
 - shiny
-- 
+
+- . knitr and rmarkdown support the main document
 
 The required packages are automatically installed when they are missing.
 
