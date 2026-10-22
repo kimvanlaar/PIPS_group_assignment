@@ -27,7 +27,7 @@ sleep_app/
 ## Requirements for running the app
 You should have R and RStudio installed on your computer. You should also have an internet connection for installing packages. 
 
-Clone the repository using R
+Clone the repository using R:
 
 ```r
 system("git clone https://github.com/kimvanlaar/PIPS_group_assignment.git")
