@@ -66,7 +66,7 @@ In order to do so, select a predefined lightning schedule or create one yourself
 
 ## Running the statistical analysis
 ### Research questions
-The main_stats.R script investigates two research questions:
+We investigated two research questions:
 1. Is greater social jet lag associated with more tiredness?
 2. Is greater social jet lag associated with lower mood?
 The regression models used to answer these research questions also adjust for age, sex and average weekly sleep duration.
