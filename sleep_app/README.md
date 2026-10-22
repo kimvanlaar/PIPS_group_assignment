@@ -13,7 +13,7 @@ sleep_app/
 ├── data-raw/
 │   └── build_reference.R    # Script used to rebuild the NHANES dataset
 ├── R/
-│   └── helpers.R            # Contains functions used in app.R and statistical_analysis.R !!!OR ONLY IN APP.R?!!!
+│   └── helpers.R            # Contains functions used in app.R and statistical_analysis.R
 ├── app.R                    # Shiny application
 ├── statistical_analysis.R   # Statistical analysis and graphs of social jet lag, tiredness and mood
 ├── sleep_app.Rproj          # RStudio project file
