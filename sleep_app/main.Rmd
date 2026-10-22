@@ -68,8 +68,8 @@ shiny::runApp("main_sleep_app.R")
 
 ## Research questions
 
-1.  More social jet lag, more tiredness?
-2.  More social jet lag, lower mood?
+1. Is more social jet lag associated with more tiredness?
+2. Is more social jet lag associated with lower mood?
 
 Both questions are tested while controlling for age, sex and average sleep duration, since these are known to be related to both sleep timing and wellbeing.
 
