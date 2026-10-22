@@ -13,7 +13,7 @@ sleep_app/
 ├── data-raw/
 │   └── build_reference.R    # Script used to rebuild the NHANES dataset
 ├── R/
-│   └── helpers.R            # Ccontains functions used in app.R and statistical_analysis.R !!!OR ONLY IN APP.R?!!!
+│   └── helpers.R            # Contains functions used in app.R and statistical_analysis.R !!!OR ONLY IN APP.R?!!!
 ├── app.R                    # Shiny application
 ├── statistical_analysis.R   # Statistical analysis and graphs of social jet lag, tiredness and mood
 ├── sleep_app.Rproj          # RStudio project file
@@ -42,10 +42,10 @@ system("git clone https://github.com/kimvanlaar/PIPS_group_assignment.git")
 ## Using the app
 The app contains two main parts, the human lab part and the rat lab part. 
 
-### The human lab
-On the first page of the app, **Your week**, enter your sleep and wake-up times for the last seven days. Indicates on which days you had to work or go to school and which days are days off. Also enter your daily mood and fatigue rating as well as your location, which compares your sleep schedule to the sunrise and sunset at that place. The app uses the geographical coordinates to calculate local daylight times. 
+### The Human Lab
+On the first page of the app, **Your week**, enter your sleep and wake-up times for the last seven days. Indicates on which days you had to work or go to school and which days are days off. Also enter your daily mood and fatigue rating as well as your location, which compares your sleep schedule to the sunrise and sunset at that place. The app uses the geographical coordinates to calculate local daylight times. (There is an option to also manually enter the sunrise and sunset times for customisation).
 
-When you've entered everything mentioned above, you can view your results. Click on **See my results** on the bottom of the page or select Results on top. You can now view your results, your average sleep duration, body clock type, social jet lag, mood and tiredness scores and when you sleep compared to daylight hours. The results can also compare your results to the average US population (the nhanes dataset). You can even filter the reference group by age or sex. 
+When you've entered everything mentioned above, you can view your results. Click on **See my results** on the bottom of the page or select Results on top. You can now view your results, your average sleep duration, body clock type, social jet lag, mood and tiredness scores and when you sleep compared to daylight hours. The results can also compare your results to the average US population (the NHANES dataset). You can even filter the reference group by age or sex. 
 
 If you want more information about the data, you can click **About the data** on the top of the screen. There you can read more about the data. 
 
