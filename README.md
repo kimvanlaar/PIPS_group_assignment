@@ -9,7 +9,7 @@ This project contains an R Shiny application about sleep, daylight and the biolo
 
 ## Repository structure
 ```text
-PIPS_group_assignment/
+PIPS_group_assignment/                 # Repository root
 ├── sleep_app/
 │   ├── src/
 │   │   ├── R/
