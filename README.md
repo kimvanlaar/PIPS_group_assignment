@@ -110,11 +110,26 @@ A regression coefficient for sjl (social jet lag) represents the estimated chang
 - The data contains US citizens only, generalizability to the full world population might therefore not be possible.
 
 ## Dependencies
-- ggplot2
-- dplyr
-- shiny
+The R analysis uses the following packages:
 
-- . knitr and rmarkdown support the main document
+- **shiny**: Builds the interactive web application.
+- **bslib**: Provides Bootstrap styling, themes, layouts and UI components.
+- **bsicons**: Adds Bootstrap icons to the interface.
+- **dplyr**: Filters, transforms and summarises data.
+- **tidyr**: Reshapes data for analysis and visualisation.
+- **tibble**: Creates and manages data frames.
+- **ggplot2**: Creates plots and charts.
+- **suncalc**: Calculates sunrise, sunset and daylight times.
+- **tidygeocoder**: Converts place names into geographic coordinates.
+- **lutz**: Determines time zones from geographic coordinates.
+- **here**: Locates project files using consistent relative paths.
+- **mgcv**: Fits Generalized Additive Models (GAMs) for smooth statistical trends.
+- **scales**: Formats scales and labels in visualisations.
+- **patchwork**: Combines multiple ggplot2 plots into one figure.
+- **haven**: Imports survey data from formats such as SAS, SPSS and Stata.
+- **plotly**: Creates interactive plots.
+- **knitr**: Executes and formats code in R Markdown documents.
+- **rmarkdown**: Renders R Markdown documents into reports and other output formats.
 
 The required packages are automatically installed when they are missing.
 
