@@ -30,12 +30,12 @@ library(tidygeocoder)   # place -> lat / lon
 library(lutz)           # lat / lon -> time zone
 
 # Load the shared helper functions explicitly (don't rely on Shiny's automatic R/ loading)
-helpers_path <- c("R/helpers.R", "helpers.R")
-helpers_path <- helpers_path[file.exists(helpers_path)][1]
-if (is.na(helpers_path))
-  stop("Can't find helpers.R. It must be in a folder called 'R' next to app.R (sleep_app/R/helpers.R), ",
-       "and R must be running from the sleep_app folder. Current folder: ", getwd())
-source(helpers_path)
+# Find the folder that holds R/helpers.R and data/, wherever R was started from
+APP_DIR <- Filter(function(d) file.exists(file.path(d, "R", "helpers.R")),
+                  c(".", "src", "sleep_app/src"))[1]
+if (is.na(APP_DIR))
+  stop("Can't find R/helpers.R. Expected it in sleep_app/src/R/. Current folder: ", getwd())
+source(file.path(APP_DIR, "R", "helpers.R"))
 
 # ------------------------- look & feel ---------------------------
 
@@ -210,7 +210,7 @@ simulate_reference <- function(n = 5000, seed = 1) {
          phq_tired = sample(0:3, n, TRUE, c(.35, .38, .13, .14)))
 }
 
-ref_path <- file.path("data", "nhanes_ref.rds")
+ref_path <- file.path(APP_DIR, "data", "nhanes_ref.rds")
 
 if (file.exists(ref_path)) {
   REF <- readRDS(ref_path)

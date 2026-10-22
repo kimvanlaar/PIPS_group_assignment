@@ -64,7 +64,7 @@ get_outcome_info <- function(outcome) {
 #' @param path Path to the .rds file. Defaults to the data folder
 #'   in the project root, located using here.
 #' @return Data frame with one row per participant.
-load_nhanes <- function(path = here::here("sleep_app", "data", "nhanes_ref.rds")) {
+load_nhanes <- function(path = here::here("src", "data", "nhanes_ref.rds")) {
   if (!file.exists(path)) {
     stop("Data file not found: ", path,
          "\nMake sure nhanes_ref.rds is in the data folder.")
