@@ -111,8 +111,8 @@ A regression coefficient for sjl (social jet lag) represents the estimated chang
 - Check that R/helpers.R exists in the source folder.
 
 ### nhanes_ref.rds is missing
-•	Run source("data-raw/build_reference.R") from the project directory. After that, check that "nhanes_ref.rds" exist in "sleep_app/src/data". 
-•	If you only want to explore the application, it may use simulated data. Do not treat simulated reference results as actual research findings.
+- Run source("data-raw/build_reference.R") from the project directory. After that, check that "nhanes_ref.rds" exist in "sleep_app/src/data".
+- If you only want to explore the application, it may use simulated data. Do not treat simulated reference results as actual research findings.
 
 ### Packages cannot be installed
 - Check your internet connection, CRAN mirror settings, and permissions to install R packages.
