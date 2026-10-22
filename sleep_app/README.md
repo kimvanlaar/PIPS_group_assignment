@@ -75,7 +75,7 @@ We use the NHANES 2017 to March 2020 data that is already included in the reposi
 This leaves about 8000 participants per analysis.
 
 ### Analysis
-For each outcome, a multiple linear regression predicts the score from social jet lag, controlling for age, sex and average sleep duration. Residual plots are included to check the model assumptions. Since the outcomes only take the values 0 to 3, the linear model is a simplification, which we discuss in the main file.
+For each outcome, a multiple linear regression predicts the score from social jet lag, controlling for age, sex and average sleep duration. Residual plots are included to check the model assumptions. The outcomes are answers on a 0 to 3 scale, which the linear regression treats as continuous. This is a simplification, but with about 8000 participants the estimates are still fairly robust.
 
 ### Output
 - A results table per model in the console (estimate, 95% confidence interval, p-value).
