@@ -109,6 +109,14 @@ A regression coefficient for sjl (social jet lag) represents the estimated chang
 - The outcomes are individual PHQ items scored from 0 to 3. They are not a full diagnostic assessment or a complete PHQ-9 score.
 - The data contains US citizens only, generalizability to the full world population might therefore not be possible.
 
+## Dependencies
+- ggplot2
+- dplyr
+- shiny
+- 
+
+The required packages are automatically installed
+when the application is run.
 ## Troubleshooting
 ### helpers.R cannot be found
 - Open the sleep_app.Rproj file and run the application from the sleep_app directory.
