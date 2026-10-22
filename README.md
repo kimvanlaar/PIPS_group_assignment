@@ -8,19 +8,20 @@ This README covers the essential information required to install, run, and inter
 This project contains an R Shiny application about sleep, daylight and the biological clock. Besides that, it includes a separate R script for statistical analyses of social jet lag en tiredness and mood. Data for these analyses have been taken from the NHANES survey (Bryan et al., 2021). 
 
 ## Repository structure
-
 ```text
 sleep_app/
-├── data/
-│   └── nhanes_ref.rds       # the NHANES dataset used for the app and analysis
-├── data-raw/
-│   └── build_reference.R    # Script used to rebuild the NHANES dataset
-├── R/
-│   └── helpers.R            # Contains functions used in app.R and statistical_analysis.R
-├── app.R                    # Shiny application
-├── statistical_analysis.R   # Statistical analysis and graphs of social jet lag, tiredness and mood
-├── sleep_app.Rproj          # RStudio project file
-├── README.md                # This installation and usage guide
+├── src/
+│   ├── R/
+│   │   └── helpers.R              # Contains functions used in app.R and statistical_analysis.R
+│   ├── data-raw/
+│   │   └── build_reference.R      # Script used to rebuild the NHANES dataset
+│   ├── data/
+│   │   └── nhanes_ref.rds         # the NHANES dataset used for the app and analysis
+│   ├── main_sleep_app.R           # Shiny application
+│   ├── main_stats.R               # Statistical analysis and visualizations of social jet lag, tiredness and mood
+│   └── sleep_app.Rproj            # RStudio project file
+├── .gitignore                     # Files excluded from Git
+└── README.md                      # Project documentation: this installation and usage guide
 ```
 
 ## Requirements for running the app
