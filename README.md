@@ -2,10 +2,12 @@
 PIPS course UvA resmas psychology - group assignment by Radha Kautavarapu, Kim van Laar and Leonie von Platen.
 
 # Sleep lab installation, usage and statistical analysis
-This README covers the essential information required to install, run, and interpret our project. 
 
-## Project overview
-This project contains an R Shiny application about sleep, daylight and the biological clock. Besides that, it includes a separate R script for statistical analyses of social jet lag en tiredness and mood. Data for these analyses have been taken from the NHANES survey (Bryan et al., 2021). 
+This README covers the essential information required to install, run, and interpret our project.
+
+## Project Overview
+
+This project contains an R Shiny application about sleep, daylight and the biological clock. Besides that, it includes a separate R script for statistical analyses of social jet lag with tiredness and mood. Data for these analyses have been taken from the NHANES survey (Bryan et al., 2021). The R Markdown file main.Rmd brings everything together in one report: it describes the app and contains the full statistical analysis with the results written out in the text. This is our main deliverable. Additionally, we also have main_sleep_app.R and main_stats.R files which are the individual files for the app and statistics which can also be run independently as explained below.
 
 ## Repository structure
 ```text
@@ -20,12 +22,14 @@ PIPS_group_assignment/                 # Repository root
 │   │       └── nhanes_ref.rds         # The NHANES dataset used for the app and analysis
 │   ├── main_sleep_app.R               # Shiny application
 │   ├── main_stats.R                   # Statistical analysis and visualizations of social jet lag, tiredness and mood
+│   ├── main.Rmd                       # R Markdown report: app description + statistical analysis (knits to HTML)
 │   └── sleep_app.Rproj                # RStudio project file
 ├── .gitignore                         # Files excluded from Git
 └── README.md                          # Project documentation: this installation and usage guide
 ```
 
-## Requirements for running the app
+## Requirements for running our main deliverable
+
 You should have R and RStudio installed on your computer. You should also have an internet connection for installing packages. 
 
 Clone the repository using R:
@@ -34,13 +38,14 @@ Clone the repository using R:
 system("git clone https://github.com/kimvanlaar/PIPS_group_assignment.git")
 ```
 
-## Running the app
 - Open sleep_app.Rproj
 
    Working via the project makes sure that the project directory is used as the working directory.
 
-- Open main_sleep_app.R
-- Click **Run App**
+- Part I: Open the main.Rmd file and run it or click Knit. Please note that if you Knit, the app automatically does not deploy so we recommend running it in R in the code chunk in Part I. (Alternatively, you can also open main_sleep_app.R and Click **Run App**)
+- Part II: Run the statisitical analysis in main.Rmd to see the plots we have created using an existing dataset. 
+
+## Running the app
 
 ## Using the app
 The app contains two main parts, the human lab part and the rat lab part. 
@@ -88,7 +93,7 @@ For each outcome, a multiple linear regression predicts the score from social je
 - To examine further nuance, we plotted the same graphs with social jet lag as continuous. Here we first plotted a straight line and on being not super informative, plotted a curve.
 - Bar plots of the percentage of responses for tiredness/low mood for different social jet lag groups.
 
-### How to run the statistical analysis:
+### How to run the statistical analysis **independent of the main.Rmd file**:
 - Open main_sleep_app.Rproj
 - Open main_stats.R
 - Run the script using **Source**
