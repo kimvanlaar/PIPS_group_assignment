@@ -45,8 +45,6 @@ system("git clone https://github.com/kimvanlaar/PIPS_group_assignment.git")
 - Part I: Open the main.Rmd file and run it or click Knit. Please note that if you Knit, the app automatically does not deploy so we recommend running it in R in the code chunk in Part I. (Alternatively, you can also open main_sleep_app.R and Click **Run App**)
 - Part II: Run the statisitical analysis in main.Rmd to see the plots we have created using an existing dataset. 
 
-## Running the app
-
 ## Using the app
 The app contains two main parts, the human lab part and the rat lab part. 
 
