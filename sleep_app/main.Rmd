@@ -1,0 +1,244 @@
+---
+title: "Sleep, light and the body clock"
+subtitle: "PIPS group project: a Shiny app and an analysis of social jet lag, tiredness and mood"
+author: "Radha Kautavarapu, Kim van Laar and Leonie von Platen"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+Please make sure to open the sleep_app.Rproj before running this.
+
+```{r setup, include = FALSE}
+
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      fig.width = 10, fig.height = 5.5)
+
+# 'here' finds the project folder, so paths work on every computer
+if (!requireNamespace("here", quietly = TRUE)) install.packages("here")
+
+# All functions live in src/R/helpers.R. This also installs and loads
+# the packages we need (dplyr, ggplot2, patchwork, plotly, here).
+source(here::here("src", "R", "helpers.R"))
+if (!requireNamespace("mgcv", quietly = TRUE)) install.packages("mgcv")
+```
+
+```{r text-helpers, include = FALSE}
+# Small helpers to put numbers into the text below,
+# so the text stays correct if the data or settings change.
+coef_row <- function(model, term) subset(summarise_model(model), predictor == term)
+fmt_p <- function(p) {
+  if (p < .001) "p < .001" else paste0("p = ", sub("^0", "", formatC(p, format = "f", digits = 3)))
+}
+fmt_b <- function(model, term) {
+  r <- coef_row(model, term)
+  r[c("estimate", "ci_lower", "ci_upper")] <- r[c("estimate", "ci_lower", "ci_upper")] + 0  # avoid "-0.000"
+  sprintf("b = %.3f, 95%% CI [%.3f, %.3f], %s", r$estimate, r$ci_lower, r$ci_upper, fmt_p(r$p_value))
+}
+pct <- function(x) round(100 * mean(x))
+gam_p <- function(model) fmt_p(summary(model)$s.table[1, "p-value"])
+```
+
+# Introduction
+
+This project is about the body clock. It has two parts:
+
+1.  **A Shiny app** where you can enter your own sleep diary and compare your sleep timing with a large US population, and where you can simulate the body clock of rats in a virtual lab.
+2.  **A statistical analysis** of real survey data on *social jet lag*: the difference between when people sleep on workdays and on free days (Wittmann et al., 2006). We test whether it goes together with tiredness and low mood in a large US sample.
+
+**How to use this document.** Open `sleep_app.Rproj` in RStudio first, so all file paths work. Then either run the chunks from top to bottom, or click **Knit** to create an HTML report. All functions are stored in `src/R/helpers.R`. This file only calls them. Missing packages are installed automatically.
+
+# Part 1: The Shiny app
+
+The app has two labs.
+
+**The Human Lab.** On the page *Your week*, you enter when you fell asleep and woke up on each of the last seven days, which days were work or school days, and how tired and how good your mood was each day. With your location, the app looks up sunrise and sunset times. On the *Results* page, the app shows your average sleep duration, your body clock type (chronotype), your social jet lag, and when you sleep compared to daylight. It also compares your results with thousands of people from the NHANES survey (Bryan et al., 2021), which you can filter by age and sex.
+
+**The Rat Lab.** This is an actogram simulator. You choose a light and dark schedule, and a virtual rat runs on its wheel. The actogram shows how its activity follows the light (entrainment), drifts in constant darkness (free-running), and slowly adjusts after a sudden shift in the schedule, like jet lag. This shows that not only humans but also other animals have an internal clock.
+
+The chunk below starts the app. It is not run when knitting. Run it yourself by clicking the green arrow in the top right corner of the chunk. Stop the app (Esc or the stop sign in the Console) before you continue.
+
+```{r run-app, eval = FALSE}
+shiny::runApp("main_sleep_app.R")
+```
+
+# Part 2: Statistical analysis
+
+## Research questions
+
+1.  More social jet lag, more tiredness?
+2.  More social jet lag, lower mood?
+
+Both questions are tested while controlling for age, sex and average sleep duration, since these are known to be related to both sleep timing and wellbeing.
+
+## Data
+
+We use the NHANES 2017 to March 2020 survey data (Bryan et al., 2021), the same data as the app uses. Participants reported their usual sleep and wake times on workdays and free days. From these, the same formulas as in the app compute sleep duration and social jet lag. As outcomes, we use two items of the PHQ-9 questionnaire (Kroenke et al., 2001): *"Feeling tired or having little energy"* and *"Feeling down, depressed or hopeless"*, both about the past two weeks and scored from 0 (not at all) to 3 (nearly every day).
+
+```{r load-data}
+nhanes <- load_nhanes()
+```
+
+## Data preparation
+
+We keep only adults (18 and older), because the PHQ-9 items were only asked from age 18. We exclude people with more than 6 hours of social jet lag, since such large values most likely reflect shift work or misreading the question. People with missing values on any analysis variable are excluded.
+
+```{r prepare-data}
+dat_tired <- prepare_analysis_data(nhanes, outcome = "phq_tired")
+dat_down  <- prepare_analysis_data(nhanes, outcome = "phq_down")
+```
+
+This leaves `r nrow(dat_tired)` participants for the tiredness analysis and `r nrow(dat_down)` for the mood analysis. Most people have little social jet lag: `r pct(dat_tired$sjl <= 1)`% have 1 hour or less, and only `r pct(dat_tired$sjl > 3)`% have more than 3 hours.
+
+The bar plots below show how people answered the two questions, per social jet lag group.
+
+```{r answer-distribution, fig.height = 6}
+distribution_plot <- plot_sjl_distribution(dat_tired, outcome = "phq_tired") +
+  plot_sjl_distribution(dat_down, outcome = "phq_down") +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+distribution_plot
+```
+
+Tiredness is common: `r pct(dat_tired$phq_tired == 0)`% did not feel tired at all, `r pct(dat_tired$phq_tired == 1)`% felt tired on several days, and `r pct(dat_tired$phq_tired >= 2)`% on more than half the days or nearly every day. Low mood is less common: `r pct(dat_down$phq_down == 0)`% reported no low mood, `r pct(dat_down$phq_down == 1)`% on several days, and `r pct(dat_down$phq_down >= 2)`% on more than half the days or nearly every day. The answer patterns look very similar across social jet lag groups.
+
+## Regression models
+
+For each outcome, we fit a multiple linear regression with social jet lag as predictor, controlling for age, sex and average sleep duration.
+
+```{r models}
+model_tired <- fit_sjl_model(dat_tired, outcome = "phq_tired")
+model_down  <- fit_sjl_model(dat_down,  outcome = "phq_down")
+
+summarise_model(model_tired)
+summarise_model(model_down)
+```
+
+The estimate shows how much the score (0 to 3) changes per unit of the predictor, with the other predictors held constant. For social jet lag, that is the change per extra hour.
+
+### Model checks
+
+The residual plots check the assumptions of the linear regression.
+
+```{r residuals, fig.height = 7}
+par(mfrow = c(2, 2))
+plot(model_tired)
+plot(model_down)
+par(mfrow = c(1, 1))
+```
+
+The residuals form stripes, and the Q-Q plot is not a straight line. This is because the outcomes can only be 0, 1, 2 or 3, while the linear regression treats them as continuous numbers. With about 8000 participants, the estimates are still fairly robust, but this is a limitation (see below). The leverage values are all very small, so no single person has a large influence on the results.
+
+## Plots
+
+The first plot shows the mean score per social jet lag group, with 95% confidence intervals. The y-axis starts at 0, so small differences are not exaggerated.
+
+```{r plot-groups}
+static_plot <- plot_outcomes_static(
+  data_list = list(dat_tired, dat_down),
+  outcomes  = c("phq_tired", "phq_down")
+) +
+  plot_annotation(caption = paste0("Points show group means with 95% confidence intervals.\n",
+                                   SCALE_NOTE))
+static_plot
+```
+
+The same plot as an interactive version: hover over the points to see the exact numbers. (Interactive plots only work in the HTML version of this report.)
+
+```{r plot-interactive, eval = knitr::is_html_output() || interactive()}
+plot_outcomes_interactive(
+  data_list = list(dat_tired, dat_down),
+  outcomes  = c("phq_tired", "phq_down")
+)
+```
+
+Social jet lag can also be treated as a continuous variable. First, a straight line, which matches the regression model:
+
+```{r plot-continuous-linear}
+plot_outcomes_continuous(
+  data_list = list(dat_tired, dat_down),
+  outcomes  = c("phq_tired", "phq_down"),
+  unadjusted_method = "lm"
+) +
+  plot_annotation(caption = paste0("Linear fit with 95% confidence band. Unadjusted. ",
+                                   "Ticks at the bottom show the data.\n", SCALE_NOTE))
+```
+
+A straight line might miss a curved relationship. The next plot uses a generalised additive model (GAM), which allows a flexible curve, adjusted for age, sex and sleep duration.
+
+```{r plot-continuous-gam}
+plot_outcomes_continuous(
+  data_list = list(dat_tired, dat_down),
+  outcomes  = c("phq_tired", "phq_down"),
+  adjusted  = TRUE
+) +
+  plot_annotation(caption = paste0("Adjusted for age, sex and weekly sleep duration ",
+                                   "(age and sleep at their mean, sex = female).\n",
+                                   "Smooth curve (GAM) with 95% confidence band. ", SCALE_NOTE))
+```
+
+To test whether this curve is significant, we fit the same GAM and look at the test for the social jet lag curve:
+
+```{r gam-tests}
+gam_tired <- mgcv::gam(phq_tired ~ s(sjl, k = 5) + age + sex + sd_week, data = dat_tired)
+gam_down  <- mgcv::gam(phq_down  ~ s(sjl, k = 5) + age + sex + sd_week, data = dat_down)
+
+summary(gam_tired)$s.table
+summary(gam_down)$s.table
+```
+
+## Robustness check: without the 6-hour cut-off
+
+To check whether excluding people with more than 6 hours of social jet lag changes our conclusions, we rerun both regressions without the cut-off.
+
+```{r robustness}
+dat_tired_all <- prepare_analysis_data(nhanes, outcome = "phq_tired", max_sjl = Inf)
+dat_down_all  <- prepare_analysis_data(nhanes, outcome = "phq_down",  max_sjl = Inf)
+
+model_tired_all <- fit_sjl_model(dat_tired_all, outcome = "phq_tired")
+model_down_all  <- fit_sjl_model(dat_down_all,  outcome = "phq_down")
+
+coef_row(model_tired_all, "sjl")
+coef_row(model_down_all,  "sjl")
+```
+
+# Results and interpretation
+
+### Question 1: More social jet lag, more tiredness?
+
+In the multiple regression, social jet lag did not predict tiredness (`r fmt_b(model_tired, "sjl")`), controlling for age, sex and sleep duration. Men reported less tiredness than women (`r fmt_b(model_tired, "sexMale")`), and people who slept longer reported slightly less tiredness per extra hour of sleep (`r fmt_b(model_tired, "sd_week")`). Age was not related to tiredness (`r fmt_p(coef_row(model_tired, "age")$p_value)`).
+
+### Question 2: More social jet lag, lower mood?
+
+Social jet lag also did not predict low mood (`r fmt_b(model_down, "sjl")`). Men reported less low mood than women (`r fmt_b(model_down, "sexMale")`). Older people reported slightly better mood (`r fmt_p(coef_row(model_down, "age")$p_value)`), but this effect was very small. Sleep duration was not related to mood (`r fmt_p(coef_row(model_down, "sd_week")$p_value)`).
+
+### Is the relationship curved?
+
+The regression only tests for a straight-line relationship. The GAM, which allows a curve, found a significant curved relationship for both tiredness (`r gam_p(gam_tired)`) and low mood (`r gam_p(gam_down)`). People with about 1 to 1.5 hours of social jet lag reported the least tiredness and low mood, while people with no social jet lag and people with a lot of social jet lag reported slightly more. These differences are small (around 0.1 to 0.15 points on the 0 to 3 scale). At the high end, the confidence band is very wide, because only few people have more than 3 hours of social jet lag.
+
+One possible explanation for the higher scores at 0 hours is that people without a regular work schedule (for example retired, unemployed or ill people) have no social jet lag, but may feel more tired or down for other reasons. NHANES does not let us separate these groups, so this remains a guess.
+
+### Robustness
+
+Without the 6-hour cut-off (N = `r nrow(dat_tired_all)` for tiredness and N = `r nrow(dat_down_all)` for mood), social jet lag still did not predict tiredness (`r fmt_b(model_tired_all, "sjl")`) or low mood (`r fmt_b(model_down_all, "sjl")`). So the cut-off does not change our conclusions.
+
+### Conclusion
+
+In this large sample of US adults, social jet lag was not linearly related to tiredness or low mood. Sex was the strongest predictor in both models, and longer sleep went with less tiredness. This suggests that how long people sleep may matter more for tiredness than how much their sleep timing shifts between workdays and free days. The curved pattern suggests that the relationship may be more complex than "more social jet lag, worse outcomes", but the differences are small.
+
+### Limitations
+
+- **Outcome scale:** the outcomes are answers on a 0 to 3 scale, which the linear regression treats as continuous numbers. This is a simplification, visible as stripes in the residual plots.
+- **Single items:** each outcome is one questionnaire item, not a full measure of fatigue or depression.
+- **Causality:** the data are cross-sectional, so we cannot conclude that social jet lag causes (or does not cause) tiredness or low mood.
+- **Work status:** NHANES asks about "workdays" and "free days", but people without regular work answer the same questions, which may blur the measure of social jet lag.
+- **Survey weights:** we did not use the NHANES survey weights, so the results describe this sample rather than the whole US population.
+- **Generalisability:** the sample consists of US residents only.
+
+# References
+
+- Bryan, S., Afful, J., Carroll, M., Te-Ching, C., Orlando, D., Fink, S., & Fryar, C. (2021). *National Health and Nutrition Examination Survey 2017–March 2020 pre-pandemic data files* (National Health Statistics Reports No. 158). <https://doi.org/10.15620/cdc:106273>
+- Kroenke, K., Spitzer, R. L., & Williams, J. B. W. (2001). The PHQ-9: Validity of a brief depression severity measure. *Journal of General Internal Medicine, 16*(9), 606–613.
+- Wittmann, M., Dinich, J., Merrow, M., & Roenneberg, T. (2006). Social jetlag: Misalignment of biological and social time. *Chronobiology International, 23*(1–2), 497–509.
