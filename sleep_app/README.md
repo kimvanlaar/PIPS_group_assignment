@@ -82,7 +82,7 @@ For each outcome, a multiple linear regression predicts the score from social je
 - A results table per model in the console (estimate, 95% confidence interval, p-value).
 - Residual plots for both models.
 - Plots of both outcomes side by side: a static version (Plots tab) and an interactive plotly version (Viewer tab), where you can hover over the points to see the exact numbers, when social jet lag is considered categorical.
-- To examine further nuance, we plotted the same graphs with social jet lag as continuous.
+- To examine further nuance, we plotted the same graphs with social jet lag as continuous. Here we first plotted a straight line and on being not super informative, plotted a curve.
 - Bar plots of the percentage of responses for tiredness/low mood for different social jet lag groups.
 
 ### How to run the statistical analysis:
