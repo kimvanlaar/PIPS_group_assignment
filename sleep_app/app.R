@@ -301,8 +301,8 @@ rat_lab <- local({
             tags$summary(strong("New here? What am I looking at?")),
             p(HTML("<strong>Rats are nocturnal animals</strong>: they sleep during the day and are active at night, so the running you see on the chart (the black bars) happens mostly in the dark. An internal 'body clock' controls this rhythm. This lab simulates a rat with a running wheel for 30 days.
                Each <strong>row</strong> of the chart is one day; each <strong>black bar</strong> is how much the rat ran at that time.
-               Grey background = lights off, white = lights on. The chart shows two days side-by-side so you can follow the pattern across midnight.")),
-            p(HTML("Pick a lighting schedule on the left (or press a preset) and watch the chart <strong>draw itself day by day</strong>.
+               Grey background = lights off, White background = lights on. The chart shows two days side-by-side so you can follow the pattern across midnight.")),
+            p(HTML("Create a lighting schedule on the left (or press a preset) and watch the chart <strong>draw itself day by day</strong>.
                A staircase of bars that slants means the clock is running free; a straight vertical edge means the clock is locked to the lights."))),
           layout_sidebar(
             fillable = FALSE,
@@ -350,7 +350,7 @@ rat_lab <- local({
           h4("Rats are nocturnal"),
           p("Rats are nocturnal animals: they sleep during the day and are active at night. That's why the running on the actogram sits in the dark part of the day, and why the 'start of running' marks the beginning of the rat's night."),
           h4("The body clock"),
-          p("Almost every animal has an internal clock that takes about a day to complete a cycle ('circadian' = 'about a day'). In rats it controls when they sleep and run. It lives in a tiny brain region called the SCN."),
+          p("Almost every animal has an internal clock that takes about a day to complete a cycle ('circadian' = 'about a day'). In rats it controls when they sleep and run. It lives in a tiny brain region called the suprachiasmatic nucleus (SCN)"),
           h4("Free-running (all dark)"),
           p("With no light to look at, the clock runs at its own pace, about 24.2 hours in rats. That's slightly longer than a real day, so every day the rat starts running a bit later. On the chart this looks like a slanted line of bars drifting to the right."),
           h4("Entrainment (light/dark cycle)"),
@@ -786,6 +786,38 @@ server <- function(input, output, session) {
     } else {
       nav_select("main_nav", "results")
     }
+  })
+  
+  # ---- social jet lag explainer pop-up (shown the first time the Results tab is opened,
+  #      whether via the "See my results" button or by clicking the tab) ----
+  sjl_modal_shown <- reactiveVal(FALSE)
+  observeEvent(input$main_nav, {
+    req(identical(input$main_nav, "results"), !sjl_modal_shown())
+    sjl_modal_shown(TRUE)
+    showModal(
+      modalDialog(
+        title = tagList(bs_icon("airplane"), " What is social jet lag?"),
+        p("Three clocks shape our daily lives. The ", strong("social clock"), " is the official local time we use to line up with school, work, transport and shop hours. ",
+          "It is loosely tied to the ", strong("sun clock"), ", the natural cycle of day and night. The third is the ", strong("biological clock"),
+          ", the circadian system that coordinates everything from metabolism to behavior so that the body stays in step with the daily environment. ",
+          "Over geological time, Earth's days have lengthened very gradually, slowly enough for biological clocks to evolve along with them. ",
+          "Our social clock, by contrast, has changed much faster than biology can follow."),
+        p("Before time zones were introduced in the late 19th century, social time matched the sun, with noon falling when the sun was highest. ",
+          "Time zones made noon an artificial convention, so local clock time and sun time now drift apart by an amount that depends on where a region's boundaries were drawn."),
+        p(strong("Social jetlag"), " is the term proposed for the chronic mismatch between a person's biological clock and the social clock, ",
+          "and it was intended as a measure of circadian misalignment, meaning an abnormal timing gap between two or more rhythms. ",
+          "For example, a late chronotype is a \u201cnight owl\u201d whose body clock naturally runs later than average. ",
+          "If they must still wake early with an alarm five days a week, they are presumed to be misaligned with social schedules. ",
+          "Unlike the temporary misalignment of travel jetlag, this one is persistent (Roenneberg et al., 2019)."),
+        p(class = "hint",
+          "Roenneberg, T., Pilz, L. K., Zerbini, G., & Winnebeck, E. C. (2019). Chronotype and social jetlag: A (self-)critical review. ",
+          em("Biology, 8"), "(3), 54. ",
+          tags$a(href = "https://doi.org/10.3390/biology8030054", target = "_blank", "https://doi.org/10.3390/biology8030054")),
+        easyClose = TRUE,
+        size = "l",
+        footer = modalButton("Got it")
+      )
+    )
   })
   
   # ---- location ----
