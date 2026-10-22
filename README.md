@@ -1,5 +1,5 @@
 # PIPS_group_assignment
-PIPS course UvA resmas psychology - group assignment by Radha Kautavarapu, Kim van Laar and Leonie von Platen.
+PIPS course UvA ResMas psychology - group assignment by Radha Kautavarapu (coding-giraffe), Kim van Laar and Leonie von Platen.
 
 # Sleep lab installation, usage and statistical analysis
 
