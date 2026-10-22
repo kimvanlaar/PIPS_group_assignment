@@ -7,7 +7,7 @@ This README covers the essential information required to install, run, and inter
 
 ## Project Overview
 
-This project contains an R Shiny application about sleep, daylight and the biological clock. Besides that, it includes a separate R script for statistical analyses of social jet lag with tiredness and mood. Data for these analyses have been taken from the NHANES survey (Bryan et al., 2021). The R Markdown file **main.Rmd ** brings everything together in one report: it describes the app and contains the full statistical analysis with the results written out in the text. This is our main deliverable. Additionally, we also have main_sleep_app.R and main_stats.R files which are the individual files for the app and statistics which can also be run independently as explained below.
+This project contains an R Shiny application about sleep, daylight and the biological clock. Besides that, it includes a separate R script for statistical analyses of social jet lag with tiredness and mood. Data for these analyses have been taken from the NHANES survey (Bryan et al., 2021). The R Markdown file **main.Rmd** brings everything together in one report: it describes the app and contains the full statistical analysis with the results written out in the text. This is our main deliverable. Additionally, we also have main_sleep_app.R and main_stats.R files which are the individual files for the app and statistics which can also be run independently as explained below.
 
 ## Repository structure
 ```text
