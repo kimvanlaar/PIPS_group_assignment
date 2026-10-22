@@ -8,26 +8,27 @@ This README covers the essential information required to install, run, and inter
 This project contains an R Shiny application about sleep, daylight and the biological clock. Besides that, it includes a separate R script for statistical analyses of social jet lag en tiredness and mood. Data for these analyses have been taken from the NHANES survey (Bryan et al., 2021). 
 
 ## Repository structure
-
 ```text
-sleep_app/
-├── data/
-│   └── nhanes_ref.rds       # the NHANES dataset used for the app and analysis
-├── data-raw/
-│   └── build_reference.R    # Script used to rebuild the NHANES dataset
-├── R/
-│   └── helpers.R            # Contains functions used in app.R and statistical_analysis.R
-├── app.R                    # Shiny application
-├── statistical_analysis.R   # Statistical analysis and graphs of social jet lag, tiredness and mood
-├── sleep_app.Rproj          # RStudio project file
-├── README.md                # This installation and usage guide
+PIPS_group_assignment/                 # Repository root
+├── sleep_app/
+│   ├── src/
+│   │   ├── R/
+│   │   │   └── helpers.R              # Contains functions used in main_sleep_app.R and main_stats.R
+│   │   ├── data-raw/
+│   │   │   └── build_reference.R      # Script used to rebuild the NHANES dataset
+│   │   └── data/
+│   │       └── nhanes_ref.rds         # The NHANES dataset used for the app and analysis
+│   ├── main_sleep_app.R               # Shiny application
+│   ├── main_stats.R                   # Statistical analysis and visualizations of social jet lag, tiredness and mood
+│   └── sleep_app.Rproj                # RStudio project file
+├── .gitignore                         # Files excluded from Git
+└── README.md                          # Project documentation: this installation and usage guide
 ```
 
 ## Requirements for running the app
 You should have R and RStudio installed on your computer. You should also have an internet connection for installing packages. 
 
-Clone the repository using R
-CHECK THIS!!!! I DON'T THINK IT WORKS :(
+Clone the repository using R:
 
 ```r
 system("git clone https://github.com/kimvanlaar/PIPS_group_assignment.git")
@@ -38,7 +39,7 @@ system("git clone https://github.com/kimvanlaar/PIPS_group_assignment.git")
 
    Working via the project makes sure that the project directory is used as the working directory.
 
-- Open app.R
+- Open main_sleep_app.R
 - Click **Run App**
 
 ## Using the app
@@ -62,13 +63,13 @@ In order to do so, select a predefined lightning schedule or create one yourself
 
 ## Running the statistical analysis
 ### Research questions
-The statistical_analysis.R script investigates two research questions:
+The main_stats.R script investigates two research questions:
 1. Is greater social jet lag associated with more tiredness?
 2. Is greater social jet lag associated with lower mood?
 The regression models used to answer these research questions also adjust for age, sex and average weekly sleep duration.
 
 ### Data
-We use the NHANES 2017 to March 2020 data that is already included in the repository (`sleep app/data/nhanes_ref.rds`; Bryan et al., 2021). It contains sleep and wake times on workdays and free days, which we use to compute social jet lag (Wittmann et al., 2006), and two items from the PHQ-9 questionnaire (Kroenke et al., 2001): "Feeling tired or having little energy" and "Feeling down, depressed or hopeless", both scored from 0 (not at all) to 3 (nearly every day). sd_week is the average weekly sleep duration.
+We use the NHANES 2017 to March 2020 data that is already included in the repository (`sleep_app/src/data/nhanes_ref.rds`; Bryan et al., 2021). It contains sleep and wake times on workdays and free days, which we use to compute social jet lag (Wittmann et al., 2006), and two items from the PHQ-9 questionnaire (Kroenke et al., 2001): "Feeling tired or having little energy" and "Feeling down, depressed or hopeless", both scored from 0 (not at all) to 3 (nearly every day). sd_week is the average weekly sleep duration.
 
 ### Data preparation
 - Only adults (18+) are kept, because the PHQ-9 items were only asked from age 18.
@@ -88,8 +89,8 @@ For each outcome, a multiple linear regression predicts the score from social je
 - Bar plots of the percentage of responses for tiredness/low mood for different social jet lag groups.
 
 ### How to run the statistical analysis:
-- Open sleep_app.Rproj
-- Open statistical_analysis.R
+- Open main_sleep_app.Rproj
+- Open main_stats.R
 - Run the script using **Source**
 - Look at the output
 
@@ -104,10 +105,10 @@ A regression coefficient for sjl (social jet lag) represents the estimated chang
 ## Troubleshooting
 ### helpers.R cannot be found
 - Open the sleep_app.Rproj file and run the application from the sleep_app directory.
-- Check that R/helpers.R exists.
+- Check that R/helpers.R exists in the source folder.
 
 ### nhanes_ref.rds is missing
-•	Run source("data-raw/build_reference.R") from the project directory.
+•	Run source("data-raw/build_reference.R") from the project directory. After that, check that "nhanes_ref.rds" exist in "sleep_app/src/data". 
 •	If you only want to explore the application, it may use simulated data. Do not treat simulated reference results as actual research findings.
 
 ### Packages cannot be installed
