@@ -92,7 +92,7 @@ For each outcome, a multiple linear regression predicts the score from social je
 - Bar plots of the percentage of responses for tiredness/low mood for different social jet lag groups.
 
 ### How to run the statistical analysis **independent of the main.Rmd file**:
-- Open main_sleep_app.Rproj
+- Open sleep_app.Rproj
 - Open main_stats.R
 - Run the script using **Source**
 - Look at the output
