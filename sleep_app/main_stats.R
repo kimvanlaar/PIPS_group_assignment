@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------
-# analysis/stats_analysis.R
+# sleep_app/main_stats.R
 # Research questions:
 #   1. More social jet lag, more tiredness?
 #   2. More social jet lag, lower mood?
