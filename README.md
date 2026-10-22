@@ -12,7 +12,7 @@ This project contains an R Shiny application about sleep, daylight and the biolo
 sleep_app/
 ├── src/
 │   ├── R/
-│   │   └── helpers.R              # Contains functions used in app.R and statistical_analysis.R
+│   │   └── helpers.R              # Contains functions used in main_sleep_app.R and main_stats.R
 │   ├── data-raw/
 │   │   └── build_reference.R      # Script used to rebuild the NHANES dataset
 │   ├── data/
@@ -69,7 +69,7 @@ The main_stats.R script investigates two research questions:
 The regression models used to answer these research questions also adjust for age, sex and average weekly sleep duration.
 
 ### Data
-We use the NHANES 2017 to March 2020 data that is already included in the repository (`sleep app/src/data/nhanes_ref.rds`; Bryan et al., 2021). It contains sleep and wake times on workdays and free days, which we use to compute social jet lag (Wittmann et al., 2006), and two items from the PHQ-9 questionnaire (Kroenke et al., 2001): "Feeling tired or having little energy" and "Feeling down, depressed or hopeless", both scored from 0 (not at all) to 3 (nearly every day). sd_week is the average weekly sleep duration.
+We use the NHANES 2017 to March 2020 data that is already included in the repository (`sleep_app/src/data/nhanes_ref.rds`; Bryan et al., 2021). It contains sleep and wake times on workdays and free days, which we use to compute social jet lag (Wittmann et al., 2006), and two items from the PHQ-9 questionnaire (Kroenke et al., 2001): "Feeling tired or having little energy" and "Feeling down, depressed or hopeless", both scored from 0 (not at all) to 3 (nearly every day). sd_week is the average weekly sleep duration.
 
 ### Data preparation
 - Only adults (18+) are kept, because the PHQ-9 items were only asked from age 18.
@@ -108,7 +108,7 @@ A regression coefficient for sjl (social jet lag) represents the estimated chang
 - Check that R/helpers.R exists in the source folder.
 
 ### nhanes_ref.rds is missing
-•	Run source("data-raw/build_reference.R") from the project directory.
+•	Run source("data-raw/build_reference.R") from the project directory. After that, check that "nhanes_ref.rds" exist in "sleep_app/src/data". 
 •	If you only want to explore the application, it may use simulated data. Do not treat simulated reference results as actual research findings.
 
 ### Packages cannot be installed
