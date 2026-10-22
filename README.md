@@ -30,7 +30,11 @@ PIPS_group_assignment/                 # Repository root
 
 ## Requirements for running our main deliverable
 
-You should have R and RStudio installed on your computer. You should also have an internet connection for installing packages. 
+You should have R and RStudio installed on your computer. You should also have an internet connection for installing packages. Furthermore, install the packages needed to open an R Markdown document:
+
+```r
+install.packages(c("knitr", "rmarkdown"))
+```
 
 Clone the repository using R:
 
