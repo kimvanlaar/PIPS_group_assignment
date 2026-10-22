@@ -22,7 +22,7 @@ PIPS_group_assignment/                 # Repository root
 │   │       └── nhanes_ref.rds         # The NHANES dataset used for the app and analysis
 │   ├── main_sleep_app.R               # Shiny application
 │   ├── main_stats.R                   # Statistical analysis and visualizations of social jet lag, tiredness and mood
-│   ├── main.Rmd                       # R Markdown report: app description + statistical analysis (knits to HTML)
+│   ├── main.Rmd                       # MAIN DELIVERABLE- R Markdown report: app description + statistical analysis (knits to HTML)
 │   └── sleep_app.Rproj                # RStudio project file
 ├── .gitignore                         # Files excluded from Git
 └── README.md                          # Project documentation: this installation and usage guide
