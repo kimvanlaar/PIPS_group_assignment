@@ -380,3 +380,117 @@ plot_outcomes_interactive <- function(data_list, outcomes, y_max = 1) {
            showlegend = FALSE)
 }
 
+
+# ===============================================================
+# PART 1C: FUNCTIONS for Continuous data
+# ===============================================================
+
+#' Plot the outcome against continuous social jet lag
+#' Draws a fitted line or curve with a 95% confidence band.
+#' A rug at the bottom shows where the data are.
+#'
+#' adjusted = FALSE: fit the raw scores using the selected method.
+#'   unadjusted_method = "gam": flexible smooth curve (Option 1).
+#'   unadjusted_method = "lm": straight-line fit (Option 2).
+#' adjusted = TRUE: use the original adjusted GAM, with numeric
+#'   covariates held at their mean and factors at their first level.
+#'   The unadjusted_method argument does not change the adjusted model.
+#'
+#' @param data Data frame from prepare_analysis_data().
+#' @param outcome Outcome column: "phq_tired" or "phq_down".
+#' @param adjusted If TRUE, adjust for the covariates using a GAM.
+#' @param covariates Control variables (only used when adjusted = TRUE).
+#' @param y_max Top of the y-axis, the same for all plots.
+#' @param k Flexibility of the GAM curve (maximum basis functions).
+#' @param unadjusted_method "gam" for a curve or "lm" for a straight line.
+#' @return A ggplot object.
+plot_sjl_continuous <- function(data, outcome = "phq_tired",
+                                adjusted = FALSE,
+                                covariates = c("age", "sex", "sd_week"),
+                                y_max = 1, k = 5,
+                                unadjusted_method = c("gam", "lm")) {
+  unadjusted_method <- match.arg(unadjusted_method)
+  info <- get_outcome_info(outcome)
+  
+  if (!adjusted) {
+    p <- ggplot(data, aes(x = sjl, y = .data[[outcome]]))
+    
+    if (unadjusted_method == "lm") {
+      p <- p + geom_smooth(
+        method = "lm",
+        formula = y ~ x,
+        se = TRUE,
+        level = 0.95,
+        colour = "#165E83",
+        fill = "#165E83",
+        alpha = 0.2
+      )
+    } else {
+      p <- p + geom_smooth(
+        method = "gam",
+        formula = as.formula(paste0("y ~ s(x, k = ", k, ")")),
+        se = TRUE,
+        level = 0.95,
+        colour = "#165E83",
+        fill = "#165E83",
+        alpha = 0.2
+      )
+    }
+  } else {
+    rhs <- c(paste0("s(sjl, k = ", k, ")"), covariates)
+    model <- mgcv::gam(reformulate(rhs, response = outcome), data = data)
+    
+    # Grid of social jet lag values, other variables held fixed
+    grid <- data.frame(sjl = seq(min(data$sjl), max(data$sjl), length.out = 100))
+    for (v in covariates) {
+      grid[[v]] <- if (is.numeric(data[[v]])) {
+        mean(data[[v]])
+      } else {
+        factor(levels(data[[v]])[1], levels = levels(data[[v]]))
+      }
+    }
+    pr <- predict(model, newdata = grid, se.fit = TRUE)
+    grid$fit   <- pr$fit
+    grid$lower <- pr$fit - 1.96 * pr$se.fit
+    grid$upper <- pr$fit + 1.96 * pr$se.fit
+    
+    p <- ggplot(grid, aes(x = sjl, y = fit)) +
+      geom_ribbon(aes(ymin = lower, ymax = upper),
+                  fill = "#165E83", alpha = 0.2) +
+      geom_line(colour = "#165E83", linewidth = 1)
+  }
+  
+  p +
+    geom_rug(data = data, aes(x = sjl), inherit.aes = FALSE,
+             sides = "b", alpha = 0.05) +
+    scale_x_continuous(breaks = 0:6) +
+    coord_cartesian(ylim = c(0, y_max)) +
+    labs(x = "Social jet lag (hours)",
+         y = info$label,
+         title = info$title,
+         subtitle = paste0("\"", info$question, "\"\nN = ", nrow(data))) +
+    theme_minimal(base_size = 12) +
+    theme(plot.title = element_text(size = 13, face = "bold"))
+}
+
+#' Put several continuous outcome plots side by side
+#' @param data_list List of data frames, one per outcome.
+#' @param outcomes Vector of outcome column names, same order as data_list.
+#' @param adjusted Passed to plot_sjl_continuous().
+#' @param y_max Top of the y-axis, the same for all plots.
+#' @param unadjusted_method "gam" (Option 1) or "lm" (Option 2).
+#' @return A patchwork object.
+plot_outcomes_continuous <- function(data_list, outcomes,
+                                     adjusted = FALSE, y_max = 1,
+                                     unadjusted_method = c("gam", "lm")) {
+  unadjusted_method <- match.arg(unadjusted_method)
+  if (length(data_list) != length(outcomes)) {
+    stop("data_list and outcomes must have the same length.")
+  }
+  plots <- lapply(seq_along(outcomes), function(i) {
+    plot_sjl_continuous(data_list[[i]], outcomes[[i]],
+                        adjusted = adjusted, y_max = y_max,
+                        unadjusted_method = unadjusted_method)
+  })
+  wrap_plots(plots, nrow = 1)
+}
