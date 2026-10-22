@@ -49,7 +49,7 @@ system("git clone https://github.com/kimvanlaar/PIPS_group_assignment.git")
 The app contains two main parts, the human lab part and the rat lab part. 
 
 ### The Human Lab
-On the first page of the app, **Your week**, enter your sleep and wake-up times for the last seven days. Indicates on which days you had to work or go to school and which days are days off. Also enter your daily mood and fatigue rating as well as your location, which compares your sleep schedule to the sunrise and sunset at that place. The app uses the geographical coordinates to calculate local daylight times. (There is an option to also manually enter the sunrise and sunset times for customisation).
+On the first page of the app, **Your week**, enter your sleep and wake-up times for the last seven days. Indicate on which days you had to work or go to school and which days are days off. Also enter your daily mood and fatigue rating as well as your location, which compares your sleep schedule to the sunrise and sunset at that place. The app uses the geographical coordinates to calculate local daylight times. (There is an option to also manually enter the sunrise and sunset times for customisation).
 
 When you've entered everything mentioned above, you can view your results. Click on **See my results** on the bottom of the page or select Results on top. You can now view your results, your average sleep duration, body clock type, social jet lag, mood and tiredness scores and when you sleep compared to daylight hours. The results can also compare your results to the average US population (the NHANES dataset). You can even filter the reference group by age or sex. 
 
@@ -62,7 +62,7 @@ The app uses the NHANES data when it can find it. If the file is missing or not 
 ### The Rat Lab
 The Rat Lab is an actogram simulator, which lets you simulate the activity of rats based on different light and darkness schedules. You can access the rat lab by clicking on **Rat clock lab** on the top of the screen. We wanted to simulate this phenomenon to show that not only humans but all living creatures have an internal clock that is linked with the circadian rhythms and will go haywire when the Light and Dark schedule is disturbed. 
 
-In order to do so, select a predefined lightning schedule or create one yourself. The actogram will now automatically start running. You can play around with the lightning and rat settings to explore free-running rhythms, entrainment and phase shifts.  
+In order to do so, select a predefined lighting schedule or create one yourself. The actogram will now automatically start running. You can play around with the lighting and rat settings to explore free-running rhythms, entrainment and phase shifts.  
 
 ## Running the statistical analysis
 ### Research questions
