@@ -18,7 +18,6 @@ sleep_app/
 ├── statistical_analysis.R   # Statistical analysis and graphs of social jet lag, tiredness and mood
 ├── sleep_app.Rproj          # RStudio project file
 ├── README.md                # This installation and usage guide
-└── README_THEORY.md         # Theoretical background on social sleep debt
 ```
 
 ## Requirements for running the app
